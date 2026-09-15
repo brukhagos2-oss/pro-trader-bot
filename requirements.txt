@@ -1,3 +1,2 @@
 pyTelegramBotAPI4.14.0
 requests2.31.0
-yfinance==0.2.36
