@@ -1,4 +1,4 @@
 pytelegrambotapi
 gtts
-moviepy
 flask
+Pillow
