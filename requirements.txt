@@ -2,4 +2,4 @@ pytelegrambotapi
 gtts
 flask
 Pillow
-google-generativeai
+requests
