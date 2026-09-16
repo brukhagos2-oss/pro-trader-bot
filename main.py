@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 # ============================================================
 # CONFIG
 # ============================================================
-TELEGRAM_TOKEN = os.getenv("8581232155:AAF5IYyCs0rKtp9VDktOz0HxwGXAOFbhsKc")
+TELEGRAM_TOKEN = "8581232155:AAF5IYyCs0rKtp9VDktOz0HxwGXAOFbhsKc"
 
 if not TELEGRAM_TOKEN:
     raise RuntimeError("TELEGRAM_BOT_TOKEN environment variable is missing.")
