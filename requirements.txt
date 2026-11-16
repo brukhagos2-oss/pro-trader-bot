@@ -1,5 +1,0 @@
-pytelegrambotapi
-gtts
-flask
-Pillow
-requests
