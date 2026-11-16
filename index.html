@@ -1,0 +1,810 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10091e">
+<title>Lidya | You Are My Universe ❤️</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root{
+ --pink:#ff8fbd;
+ --rose:#ff4f91;
+ --purple:#b69aff;
+ --white:#fff4fa;
+ --glass:rgba(255,255,255,.075);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+ background:#10091e;
+ color:var(--white);
+ font-family:'Poppins',sans-serif;
+ overflow-x:hidden;
+}
+
+button{font-family:inherit}
+
+#universe{
+ position:fixed;
+ inset:0;
+ width:100%;
+ height:100%;
+ pointer-events:none;
+ z-index:0;
+}
+
+.aurora{
+ position:fixed;
+ width:500px;
+ height:500px;
+ border-radius:50%;
+ filter:blur(110px);
+ opacity:.16;
+ pointer-events:none;
+ z-index:0;
+ animation:aurora 12s ease-in-out infinite alternate;
+}
+
+.a1{background:#ff3c91;top:-200px;left:-150px}
+.a2{background:#8655ff;bottom:-200px;right:-150px;animation-delay:-5s}
+
+@keyframes aurora{
+ to{transform:translate(100px,100px) scale(1.3)}
+}
+
+.screen{
+ min-height:100svh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ position:relative;
+ z-index:2;
+ padding:30px 18px;
+}
+
+.glass{
+ background:rgba(255,255,255,.055);
+ border:1px solid rgba(255,255,255,.13);
+ backdrop-filter:blur(22px);
+ -webkit-backdrop-filter:blur(22px);
+ box-shadow:0 25px 100px rgba(0,0,0,.3);
+ border-radius:30px;
+}
+
+.intro{
+ width:min(680px,100%);
+ padding:55px 25px;
+ text-align:center;
+ animation:appear 1.5s ease;
+}
+
+@keyframes appear{
+ from{opacity:0;transform:translateY(40px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.tag{
+ color:#ffafd0;
+ letter-spacing:5px;
+ font-size:10px;
+ text-transform:uppercase;
+}
+
+.name{
+ font-family:'Great Vibes',cursive;
+ font-size:clamp(75px,15vw,125px);
+ line-height:1.2;
+ margin:20px 0;
+ background:linear-gradient(90deg,#fff,#ffb4d4,#d9baff);
+ background-clip:text;
+ -webkit-background-clip:text;
+ color:transparent;
+ filter:drop-shadow(0 0 25px #ff76ae55);
+}
+
+.intro p{
+ color:#e8d9ec;
+ font-size:14px;
+ line-height:2;
+ max-width:450px;
+ margin:0 auto 30px;
+}
+
+.orbit{
+ width:170px;
+ height:170px;
+ border:1px solid #ff9bc455;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ margin:25px auto 35px;
+ position:relative;
+ box-shadow:0 0 50px #ff4f9130,inset 0 0 35px #ff4f9120;
+}
+
+.orbit:before,.orbit:after{
+ content:'';
+ position:absolute;
+ border:1px solid #ff9bc433;
+ border-radius:50%;
+ inset:-15px;
+ animation:spin 12s linear infinite;
+}
+
+.orbit:after{
+ inset:-30px;
+ border-style:dashed;
+ animation-duration:25s;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.orbit span{
+ font-size:75px;
+ animation:heartbeat 1.5s infinite;
+ filter:drop-shadow(0 0 20px #ff4f91);
+}
+
+@keyframes heartbeat{
+ 0%,100%{transform:scale(1)}
+ 15%{transform:scale(1.18)}
+ 30%{transform:scale(1)}
+ 45%{transform:scale(1.12)}
+}
+
+.main-btn{
+ border:1px solid #ffffff55;
+ padding:17px 35px;
+ border-radius:50px;
+ color:#45152f;
+ background:linear-gradient(120deg,#ffe0ee,#ff91bc,#e8b4ff);
+ font-size:14px;
+ font-weight:600;
+ cursor:pointer;
+ box-shadow:0 0 35px #ff5e9c40;
+ transition:.4s;
+}
+
+.main-btn:hover{
+ transform:translateY(-5px) scale(1.04);
+ box-shadow:0 0 50px #ff5e9c80;
+}
+
+.hint{
+ color:#bba9c7;
+ font-size:11px;
+ margin-top:20px;
+}
+
+/* MAIN EXPERIENCE */
+
+#experience{
+ display:none;
+ padding:100px 20px;
+ position:relative;
+ z-index:2;
+}
+
+.section{
+ width:min(850px,100%);
+ margin:0 auto 100px;
+ text-align:center;
+}
+
+.section-label{
+ color:#ff9fc7;
+ font-size:11px;
+ letter-spacing:4px;
+ text-transform:uppercase;
+ margin-bottom:20px;
+}
+
+.section-title{
+ font-family:'Playfair Display',serif;
+ font-size:clamp(32px,7vw,55px);
+ font-weight:400;
+ margin-bottom:25px;
+}
+
+.section-text{
+ max-width:620px;
+ margin:auto;
+ line-height:2.1;
+ font-size:14px;
+ color:#e4d5e8;
+}
+
+/* ENVELOPE */
+
+.envelope-area{
+ perspective:1000px;
+ margin:45px auto;
+ width:260px;
+ height:190px;
+ position:relative;
+ cursor:pointer;
+}
+
+.envelope{
+ position:absolute;
+ inset:0;
+ background:linear-gradient(145deg,#e96c9e,#9e3c7d);
+ border-radius:5px 5px 12px 12px;
+ box-shadow:0 20px 55px #0006;
+}
+
+.envelope:before{
+ content:'';
+ position:absolute;
+ bottom:0;
+ border-left:130px solid transparent;
+ border-right:130px solid transparent;
+ border-bottom:110px solid #f3a2c2;
+ z-index:3;
+}
+
+.flap{
+ position:absolute;
+ top:0;
+ border-left:130px solid transparent;
+ border-right:130px solid transparent;
+ border-top:115px solid #ffb4d1;
+ transform-origin:top;
+ transition:transform 1s ease;
+ z-index:4;
+}
+
+.seal{
+ position:absolute;
+ left:50%;
+ top:48%;
+ transform:translate(-50%,-50%);
+ font-size:35px;
+ z-index:5;
+ transition:.5s;
+}
+
+.letter-paper{
+ position:absolute;
+ width:220px;
+ height:155px;
+ left:20px;
+ bottom:10px;
+ background:#fff0f6;
+ border-radius:7px;
+ z-index:2;
+ transition:transform 1.2s ease;
+}
+
+.envelope.open .flap{
+ transform:rotateX(180deg);
+ z-index:1;
+}
+
+.envelope.open .letter-paper{
+ transform:translateY(-125px);
+}
+
+.envelope.open .seal{
+ opacity:0;
+}
+
+.tap{
+ color:#f4b5d3;
+ font-size:12px;
+ margin-top:15px;
+}
+
+/* LOVE LETTER */
+
+.letter-content{
+ display:none;
+ max-width:680px;
+ margin:55px auto;
+ padding:clamp(25px,6vw,50px);
+ text-align:left;
+ animation:rise 1.2s ease;
+}
+
+@keyframes rise{
+ from{opacity:0;transform:translateY(35px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.letter-content h2{
+ font-family:'Great Vibes',cursive;
+ font-size:50px;
+ color:#ffacd0;
+ text-align:center;
+ margin-bottom:30px;
+}
+
+.letter-content p{
+ color:#f1e1ed;
+ font-size:14px;
+ line-height:2.2;
+ margin-bottom:20px;
+}
+
+.signature{
+ font-family:'Great Vibes',cursive;
+ font-size:34px!important;
+ color:#ffacd0!important;
+ text-align:right;
+ margin-top:35px;
+}
+
+/* REASONS */
+
+.reasons{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+ gap:18px;
+ margin-top:45px;
+}
+
+.reason{
+ padding:30px 18px;
+ text-align:center;
+ transition:.4s;
+}
+
+.reason:hover{
+ transform:translateY(-10px);
+ border-color:#ff9fc7;
+ background:#ffffff12;
+}
+
+.reason .emoji{
+ font-size:37px;
+ margin-bottom:15px;
+}
+
+.reason h3{
+ font-family:'Playfair Display',serif;
+ font-size:20px;
+ font-weight:400;
+ color:#ffb3d2;
+ margin-bottom:12px;
+}
+
+.reason p{
+ font-size:12px;
+ color:#dfcde2;
+ line-height:1.9;
+}
+
+/* FINAL QUESTION */
+
+.final-card{
+ padding:55px 25px;
+}
+
+.final-card h2{
+ font-family:'Great Vibes',cursive;
+ font-size:clamp(45px,10vw,75px);
+ color:#ffafd0;
+ margin-bottom:20px;
+}
+
+.final-card p{
+ color:#e8d8ec;
+ line-height:2;
+ font-size:14px;
+ max-width:500px;
+ margin:0 auto 30px;
+}
+
+#answer{
+ display:none;
+ color:#ffb6d4;
+ font-family:'Great Vibes',cursive;
+ font-size:45px;
+ margin-top:30px;
+ animation:appear 1s;
+}
+
+footer{
+ text-align:center;
+ padding:40px 15px;
+ color:#bca9c7;
+ font-size:11px;
+ letter-spacing:2px;
+}
+
+/* FLOATING HEARTS */
+
+.floating{
+ position:fixed;
+ bottom:-60px;
+ pointer-events:none;
+ z-index:1;
+ animation:floatUp linear forwards;
+}
+
+@keyframes floatUp{
+ 0%{transform:translateY(0) rotate(0);opacity:0}
+ 10%{opacity:.8}
+ 100%{transform:translateY(-110vh) rotate(50deg);opacity:0}
+}
+
+.hidden{display:none!important}
+
+@media(max-width:600px){
+ .intro{padding:45px 20px}
+ .section{margin-bottom:75px}
+ .envelope-area{transform:scale(.9)}
+ .letter-content{padding:25px 20px}
+}
+
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{
+  animation-duration:.01ms!important;
+  animation-iteration-count:1!important;
+  scroll-behavior:auto!important;
+  transition-duration:.01ms!important;
+ }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="universe"></canvas>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+
+<!-- OPENING SCREEN -->
+
+<section class="screen" id="opening">
+ <div class="intro glass">
+
+  <div class="tag">A special universe created for you</div>
+
+  <h1 class="name">Lidya</h1>
+
+  <p>
+   In a world full of ordinary moments,
+   there is someone who makes everything feel magical.
+   This little universe belongs to you. ❤️
+  </p>
+
+  <div class="orbit">
+   <span>💗</span>
+  </div>
+
+  <button class="main-btn" id="start">
+   ENTER MY HEART ✨
+  </button>
+
+  <div class="hint">A surprise made with love, just for you.</div>
+
+ </div>
+</section>
+
+<!-- MAIN EXPERIENCE -->
+
+<main id="experience">
+
+ <section class="section">
+  <div class="section-label">01 — Something from my heart</div>
+
+  <h2 class="section-title">
+   A little magic for you
+  </h2>
+
+  <p class="section-text">
+   Lidya, I wanted to create something different.
+   Not just a message, not just a picture,
+   but a little place where my feelings could live.
+   Every detail here is a reminder that you are special. 💗
+  </p>
+ </section>
+
+ <!-- ENVELOPE -->
+
+ <section class="section">
+
+  <div class="section-label">02 — A secret letter</div>
+
+  <h2 class="section-title">A message for you...</h2>
+
+  <div class="envelope-area" id="envelopeArea">
+   <div class="envelope" id="envelope">
+    <div class="letter-paper"></div>
+    <div class="flap"></div>
+    <div class="seal">❤️</div>
+   </div>
+  </div>
+
+  <div class="tap" id="tapText">
+   TAP THE ENVELOPE TO OPEN YOUR LETTER 💌
+  </div>
+
+  <article class="letter-content glass" id="letter">
+
+   <h2>My Dearest Lidya...</h2>
+
+   <p>My beautiful Lidya, ❤️</p>
+
+   <p>
+    Sometimes I wish I could pause time just to enjoy
+    the beautiful little moments that make life special.
+    And sometimes, I wish I could find the perfect words
+    to explain what you mean to me.
+   </p>
+
+   <p>
+    You are someone I appreciate more than words can express.
+    Your smile, your personality, your presence...
+    there are so many little things about you that make
+    you unforgettable.
+   </p>
+
+   <p>
+    I don't need a perfect world.
+    I don't need every day to be magical.
+    I just want to create beautiful memories,
+    share laughter, support each other,
+    and make you feel appreciated.
+   </p>
+
+   <p>
+    If I could give you one gift, it would be the ability
+    to see yourself through my eyes.
+    Then you would understand how beautiful,
+    wonderful, and precious you are.
+   </p>
+
+   <p>
+    Thank you for being part of my world, Lidya.
+    I hope this little surprise brings a smile to your face.
+    You deserve happiness, today and every day. 🌹
+   </p>
+
+   <p class="signature">
+    With all my love... ❤️
+   </p>
+
+  </article>
+ </section>
+
+ <!-- REASONS -->
+
+ <section class="section">
+
+  <div class="section-label">03 — Little things, big feelings</div>
+
+  <h2 class="section-title">
+   Why you are so special
+  </h2>
+
+  <p class="section-text">
+   There are a thousand little reasons to appreciate you.
+   Here are just a few...
+  </p>
+
+  <div class="reasons">
+
+   <div class="reason glass">
+    <div class="emoji">🌹</div>
+    <h3>Your Beauty</h3>
+    <p>There is something about you that makes you shine in your own beautiful way.</p>
+   </div>
+
+   <div class="reason glass">
+    <div class="emoji">😊</div>
+    <h3>Your Smile</h3>
+    <p>Your happiness can make even an ordinary day feel extraordinary.</p>
+   </div>
+
+   <div class="reason glass">
+    <div class="emoji">💗</div>
+    <h3>Your Heart</h3>
+    <p>The person you are makes you more precious than you know.</p>
+   </div>
+
+   <div class="reason glass">
+    <div class="emoji">✨</div>
+    <h3>Your Magic</h3>
+    <p>You make little moments feel special just by being yourself.</p>
+   </div>
+
+   <div class="reason glass">
+    <div class="emoji">🌙</div>
+    <h3>Your Presence</h3>
+    <p>Some people make the world feel warmer. You are one of them.</p>
+   </div>
+
+   <div class="reason glass">
+    <div class="emoji">🦋</div>
+    <h3>Simply You</h3>
+    <p>No reason needed. Being yourself is already something wonderful.</p>
+   </div>
+
+  </div>
+ </section>
+
+ <!-- FINAL SURPRISE -->
+
+ <section class="section">
+  <div class="final-card glass">
+
+   <div class="section-label">04 — One last thing</div>
+
+   <h2>Lidya, My Universe</h2>
+
+   <p>
+    If I could make one wish,
+    it would be to see you happy,
+    to make you smile,
+    and to create countless beautiful memories together.
+   </p>
+
+   <div style="font-size:65px;margin:25px">
+    💖🌹💫
+   </div>
+
+   <h2 style="font-size:40px">
+    Will you keep making memories with me?
+   </h2>
+
+   <button class="main-btn" id="yes">
+    YES, OF COURSE! 💗
+   </button>
+
+   <div id="answer">
+    You just made my heart the happiest! ❤️
+   </div>
+
+  </div>
+ </section>
+
+ <footer>
+  DESIGNED WITH LOVE • ESPECIALLY FOR LIDYA ❤️
+  <br><br>
+  IN A UNIVERSE OF BILLIONS, YOU ARE SPECIAL.
+ </footer>
+
+</main>
+
+<script>
+
+/* STARRY UNIVERSE */
+
+const canvas=document.getElementById("universe");
+const ctx=canvas.getContext("2d");
+
+let stars=[];
+let width,height;
+
+function resize(){
+ width=canvas.width=innerWidth*devicePixelRatio;
+ height=canvas.height=innerHeight*devicePixelRatio;
+ canvas.style.width=innerWidth+"px";
+ canvas.style.height=innerHeight+"px";
+
+ stars=Array.from({length:120},()=>({
+  x:Math.random()*width,
+  y:Math.random()*height,
+  r:Math.random()*1.7+.3,
+  a:Math.random(),
+  speed:Math.random()*.015+.003
+ }));
+}
+
+function draw(){
+ ctx.clearRect(0,0,width,height);
+
+ stars.forEach(s=>{
+  s.a+=s.speed;
+  let opacity=.25+Math.abs(Math.sin(s.a))*.65;
+
+  ctx.beginPath();
+  ctx.arc(s.x,s.y,s.r*devicePixelRatio,0,Math.PI*2);
+  ctx.fillStyle=`rgba(255,220,240,${opacity})`;
+  ctx.fill();
+ });
+
+ requestAnimationFrame(draw);
+}
+
+resize();
+draw();
+addEventListener("resize",resize);
+
+/* FLOATING HEARTS */
+
+function createHeart(){
+ const h=document.createElement("div");
+ h.className="floating";
+
+ const emojis=["💗","💕","❤️","🌸","✨","💖","🦋"];
+
+ h.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+ h.style.left=Math.random()*100+"vw";
+ h.style.fontSize=(15+Math.random()*25)+"px";
+ h.style.animationDuration=(7+Math.random()*8)+"s";
+
+ document.body.appendChild(h);
+
+ setTimeout(()=>h.remove(),16000);
+}
+
+setInterval(createHeart,550);
+
+/* OPEN THE EXPERIENCE */
+
+document.getElementById("start").onclick=()=>{
+ const opening=document.getElementById("opening");
+ const experience=document.getElementById("experience");
+
+ opening.style.transition="opacity 1s,transform 1s";
+ opening.style.opacity="0";
+ opening.style.transform="scale(1.05)";
+
+ setTimeout(()=>{
+  opening.style.display="none";
+  experience.style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+
+  for(let i=0;i<20;i++){
+   setTimeout(createHeart,i*100);
+  }
+ },1000);
+};
+
+/* OPEN THE LOVE LETTER */
+
+let opened=false;
+
+document.getElementById("envelopeArea").onclick=()=>{
+ if(opened)return;
+ opened=true;
+
+ document.getElementById("envelope").classList.add("open");
+ document.getElementById("tapText").textContent="A LETTER STRAIGHT FROM MY HEART ❤️";
+
+ setTimeout(()=>{
+  const letter=document.getElementById("letter");
+  letter.style.display="block";
+
+  letter.scrollIntoView({
+   behavior:"smooth",
+   block:"center"
+  });
+
+  for(let i=0;i<20;i++){
+   setTimeout(createHeart,i*90);
+  }
+ },1100);
+};
+
+/* FINAL CELEBRATION */
+
+document.getElementById("yes").onclick=()=>{
+ document.getElementById("answer").style.display="block";
+
+ for(let i=0;i<60;i++){
+  setTimeout(createHeart,i*65);
+ }
+
+ document.getElementById("yes").textContent="YOU ARE AMAZING! ❤️";
+
+ document.getElementById("answer").scrollIntoView({
+  behavior:"smooth",
+  block:"center"
+ });
+};
+
+</script>
+
+</body>
+</html>
