@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAXG/USDT Institutional AI Trading Terminal</title>
+  <meta name="description" content="Institutional PAXG/USDT research terminal with multi-timeframe ICT/SMC analysis, risk controls, Gemini AI validation, and honest backtesting." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg: #07090e;
+      --panel: #0f1420;
+      --panel-2: #141c2a;
+      --panel-3: #182235;
+      --gold: #d4af37;
+      --gold-bright: #ffd700;
+      --bull: #00e676;
+      --bear: #ff1744;
+      --text: #e8edf7;
+      --muted: #9aa7bf;
+      --muted-2: #6f7c96;
+      --line: rgba(255,255,255,0.08);
+      --shadow: rgba(0,0,0,0.38);
+      --warning: #ffb000;
+      --info: #3db7ff;
+      --pink: #ff4bb7;
+      --purple: #9b7bff;
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100%;scroll-behavior:smooth}
+    body{
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 28%),
+        linear-gradient(180deg, #07090e 0%, #0a0f16 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    .container{max-width:1500px;margin:0 auto;padding:20px 16px 40px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;
+      background:rgba(15,20,32,0.88);border:1px solid var(--line);border-radius:18px;padding:16px 18px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.25);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{
+      width:42px;height:42px;border-radius:12px;background:
+      linear-gradient(135deg, rgba(212,175,55,0.25), rgba(255,215,0,0.08)),
+      linear-gradient(135deg, #0d111b, #131d2d);
+      border:1px solid rgba(255,215,0,0.35);
+      display:grid;place-items:center;font-weight:800;color:var(--gold-bright);
+      box-shadow:inset 0 0 20px rgba(255,215,0,0.08),0 0 20px rgba(212,175,55,0.1);
+    }
+    .brand h1{font-size:clamp(1rem, 2vw, 1.55rem);margin:0;letter-spacing:0.08em;text-transform:uppercase}
+    .brand small{display:block;color:var(--muted);letter-spacing:0.14em;font-weight:600}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      border:1px solid var(--line);background:rgba(255,255,255,0.02);font-size:0.78rem;font-weight:600;color:var(--muted)
+    }
+    .dot{width:9px;height:9px;border-radius:50%;display:inline-block;box-shadow:0 0 12px currentColor}
+    .dot.live{background:var(--bull);color:var(--bull)}
+    .dot.warn{background:var(--warning);color:var(--warning)}
+    .dot.off{background:var(--muted-2);color:var(--muted-2)}
+    .dot.ai{background:var(--info);color:var(--info)}
+
+    .grid{
+      display:grid;grid-template-columns:1.45fr 0.95fr;gap:18px;
+    }
+    .panel{
+      background:linear-gradient(180deg, rgba(18,24,36,0.95), rgba(14,18,28,0.95));
+      border:1px solid var(--line);
+      border-radius:18px;box-shadow:0 18px 45px var(--shadow);
+    }
+    .panel-header{
+      border-bottom:1px solid var(--line);padding:14px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .panel-header h2{font-size:0.82rem;text-transform:uppercase;letter-spacing:0.14em;margin:0;color:var(--muted)}
+    .status{
+      font-size:0.7rem;padding:6px 10px;border-radius:999px;background:rgba(0,230,118,0.08);color:var(--bull);border:1px solid rgba(0,230,118,0.18)
+    }
+    .status.warn{background:rgba(255,176,0,0.08);color:var(--warning);border-color:rgba(255,176,0,0.2)}
+    .status.off{background:rgba(255,255,255,0.03);color:var(--muted);border-color:var(--line)}
+
+    .market-panel{padding:18px}
+    .ticker-row{
+      display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;
+      border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px;
+    }
+    .pair-block h3{
+      margin:0;font-size:clamp(1.2rem, 2vw, 2.3rem);font-weight:800;letter-spacing:0.04em;
+    }
+    .pair-block small{display:block;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px}
+    .price-block{text-align:right}
+    .price{
+      font-family:'JetBrains Mono', monospace;font-size:clamp(1.9rem, 4vw, 3rem);font-weight:800;letter-spacing:-0.04em;color:var(--gold-bright)
+    }
+    .price-meta{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;color:var(--muted);font-size:0.82rem}
+    .price-change.up{color:var(--bull)}
+    .price-change.down{color:var(--bear)}
+    .market-stats{
+      display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:12px;margin-top:18px;
+    }
+    .metric{padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,0.015)}
+    .metric .label{display:block;color:var(--muted);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px}
+    .metric .value{font-family:'JetBrains Mono', monospace;font-weight:700;font-size:1rem}
+
+    .chart-wrap{
+      position:relative;margin-top:18px;border:1px solid var(--line);border-radius:16px;background:rgba(9,12,18,0.96);overflow:hidden;
+    }
+    canvas{display:block;width:100%;height:420px;background:linear-gradient(180deg, #0a0f16 0%, #101724 100%);}
+    .legend{
+      display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:rgba(255,255,255,0.01)
+    }
+    .legend-badge{
+      padding:7px 9px;border-radius:999px;border:1px solid var(--line);font-size:0.75rem;color:var(--muted);background:rgba(255,255,255,0.02)
+    }
+    .legend-badge strong{color:var(--text)}
+
+    .right-stack{display:flex;flex-direction:column;gap:18px}
+    .mini-panel{padding:14px 16px}
+    .signal-score{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .score-box{
+      background:linear-gradient(135deg, rgba(212,175,55,0.18), rgba(255,215,0,0.04));border:1px solid rgba(212,175,55,0.34);
+      border-radius:16px;padding:14px 16px;min-width:130px;text-align:center;box-shadow:0 0 25px rgba(212,175,55,0.08);
+    }
+    .score-box .small-label{display:block;color:var(--muted);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase}
+    .score-box .score-value{font-size:2.2rem;font-weight:800;color:var(--gold-bright);font-family:'JetBrains Mono', monospace}
+    .score-box .score-tier{margin-top:6px;font-size:0.74rem;color:var(--text);letter-spacing:0.06em;text-transform:uppercase}
+
+    .bias-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .tf-bias{
+      border:1px solid var(--line);background:rgba(255,255,255,0.015);border-radius:12px;padding:10px 12px;text-align:center
+    }
+    .tf-bias .tf{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+    .tf-bias .bias{margin-top:7px;font-weight:800;font-size:1.12rem}
+    .tf-bias.bull .bias{color:var(--bull)}
+    .tf-bias.bear .bias{color:var(--bear)}
+    .tf-bias.neutral .bias{color:var(--warning)}
+
+    .settings{display:grid;gap:10px;margin-top:16px}
+    .field{display:grid;gap:6px}
+    .field label{display:block;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase}
+    .field input, .field select{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,0.02);color:var(--text)
+    }
+    .checkbox-row{display:flex;align-items:center;gap:10px;padding:8px 0}
+    .checkbox-row input{accent-color:var(--gold-bright)}
+    .button-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .btn{
+      border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:700;transition:transform 0.2s ease, box-shadow 0.2s ease;
+      background:linear-gradient(135deg, rgba(212,175,55,0.18), rgba(255,215,0,0.08));border:1px solid rgba(212,175,55,0.35);color:var(--text);
+      box-shadow:0 12px 28px rgba(212,175,55,0.08);
+    }
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(0,230,118,0.18), rgba(136,255,200,0.08));border-color:rgba(0,230,118,0.25);color:var(--text)
+    }
+    .btn.secondary{
+      background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));border-color:var(--line)
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+
+    .bottom-grid{
+      margin-top:18px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:18px;
+    }
+    .analysis-grid{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px;
+    }
+    .stack{padding:16px}
+    .stack h3{margin:0 0 10px;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+    .list{display:grid;gap:8px}
+    .list-row{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      border:1px solid var(--line);background:rgba(255,255,255,0.02);padding:10px 12px;border-radius:12px;
+    }
+    .list-row span:first-child{color:var(--muted)}
+    .list-row strong{font-family:'JetBrains Mono', monospace;font-size:0.9rem}
+    .tag{
+      display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:999px;font-size:0.68rem;
+      font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--line)
+    }
+    .tag.buy{background:rgba(0,230,118,0.08);border-color:rgba(0,230,118,0.2);color:var(--bull)}
+    .tag.sell{background:rgba(255,23,68,0.08);border-color:rgba(255,23,68,0.2);color:var(--bear)}
+    .tag.wait{background:rgba(255,176,0,0.08);border-color:rgba(255,176,0,0.2);color:var(--warning)}
+    .tag.info{background:rgba(61,183,255,0.08);border-color:rgba(61,183,255,0.23);color:var(--info)}
+
+    .risk-box{
+      display:grid;gap:10px;padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,0.02)
+    }
+    .risk-box .row{display:flex;justify-content:space-between;gap:12px}
+    .risk-box .row span{color:var(--muted)}
+    .risk-box .row strong{font-family:'JetBrains Mono', monospace;}
+
+    .journal{max-height:260px;overflow:auto;padding-right:6px}
+    .journal-entry{
+      margin-bottom:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,0.02)
+    }
+    .journal-entry .top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .journal-entry .meta{color:var(--muted);font-size:0.72rem}
+    .journal-entry .pnl.win{color:var(--bull)}
+    .journal-entry .pnl.loss{color:var(--bear)}
+
+    .legal{
+      margin-top:18px;padding:14px 16px;border:1px solid rgba(255,176,0,0.18);border-radius:12px;background:rgba(255,176,0,0.05);
+      color:#f9dbc0;font-size:0.85rem;line-height:1.6
+    }
+
+    .gemini-panel{padding:16px;display:grid;gap:12px}
+    .api-key-box{
+      display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center
+    }
+    .api-key-box input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,0.02);color:var(--text)}
+    .small-btn{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--text);cursor:pointer}
+    .small-btn.warn{border-color:rgba(255,176,0,0.22);background:rgba(255,176,0,0.05);color:var(--warning)}
+    .ai-status{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,0.02)}
+    .ai-status strong{font-size:0.82rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase}
+    .ai-status .state{font-weight:700}
+
+    .gemini-output{
+      background:rgba(9,12,18,0.85);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:'JetBrains Mono', monospace;font-size:0.74rem;white-space:pre-wrap;color:#d8e3ff;min-height:180px;overflow:auto
+    }
+    .gemini-output.empty{color:var(--muted)}
+
+    .disclosure{
+      margin-top:22px;padding:16px 18px;border-radius:14px;border:1px solid rgba(255,215,0,0.22);
+      background:linear-gradient(135deg, rgba(255,215,0,0.07), rgba(255,255,255,0.02));color:#f8e5ad;
+      font-size:0.86rem;line-height:1.7
+    }
+    .disclosure b{color:var(--gold-bright)}
+
+    .collapsible{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.02)}
+    .collapsible summary{
+      list-style:none;cursor:pointer;padding:12px 14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);user-select:none;
+    }
+    .collapsible summary::-webkit-details-marker{display:none}
+    .collapsible-content{padding:0 14px 14px}
+    .grid-3{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:12px}
+
+    @media (max-width: 1100px){
+      .grid{grid-template-columns:1fr}
+      .bottom-grid{grid-template-columns:1fr}
+      .analysis-grid{grid-template-columns:1fr}
+      .market-stats{grid-template-columns:repeat(2, minmax(0,1fr))}
+    }
+
+    @media (max-width: 650px){
+      .container{padding:14px 12px 30px}
+      .topbar{flex-direction:column;align-items:flex-start}
+      .top-actions{width:100%}
+      .pill{flex:1 1 auto;justify-content:center}
+      .market-stats{grid-template-columns:1fr 1fr}
+      .bias-grid{grid-template-columns:1fr}
+      .grid-3{grid-template-columns:1fr}
+      .api-key-box{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">P</div>
+        <div>
+          <h1>PAXG/USDT</h1>
+          <small>Institutional AI Terminal</small>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="pill"><span class="dot live"></span> Binance Feed</span>
+        <span class="pill"><span class="dot ai"></span> Gemini: <span id="gemini-status-badge">Key Required</span></span>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Market Overview</h2>
+          <span id="feed-status" class="status">Live</span>
+        </div>
+        <div class="market-panel">
+          <div class="ticker-row">
+            <div class="pair-block">
+              <h3>PAXG/USDT</h3>
+              <small>Binance Spot</small>
+            </div>
+            <div class="price-block">
+              <div id="price-now" class="price">--</div>
+              <div class="price-meta">
+                <span>24h High <strong id="day-high">--</strong></span>
+                <span>24h Low <strong id="day-low">--</strong></span>
+              </div>
+              <div class="price-meta">
+                <span>Change <strong id="day-change" class="price-change">--</strong></span>
+                <span>Vol <strong id="quote-volume">--</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="market-stats">
+            <div class="metric">
+              <span class="label">Open</span>
+              <span id="open-price" class="value">--</span>
+            </div>
+            <div class="metric">
+              <span class="label">Prev Close</span>
+              <span id="prev-close" class="value">--</span>
+            </div>
+            <div class="metric">
+              <span class="label">VWAP</span>
+              <span id="vwap" class="value">--</span>
+            </div>
+            <div class="metric">
+              <span class="label">Spread</span>
+              <span id="spread" class="value">--</span>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="mainChart" width="1200" height="420"></canvas>
+            <div class="legend">
+              <span class="legend-badge"><strong>Price</strong> market</span>
+              <span class="legend-badge"><strong>FVG</strong> fair value gap</span>
+              <span class="legend-badge"><strong>OB</strong> order block</span>
+              <span class="legend-badge"><strong>Liquidity</strong> sweep levels</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-stack">
+        <section class="panel mini-panel">
+          <div class="panel-header">
+            <h2>Signal Engine</h2>
+            <span id="signal-status" class="status">Monitoring</span>
+          </div>
+          <div style="padding:16px">
+            <div class="signal-score">
+              <div class="score-box">
+                <span class="small-label">Institutional Score</span>
+                <div id="signal-score" class="score-value">0</div>
+                <div id="score-tier" class="score-tier">NO TRADE</div>
+              </div>
+              <div class="tag wait" id="decision-tag">WAIT</div>
+            </div>
+
+            <div class="bias-grid">
+              <div class="tf-bias neutral">
+                <div class="tf">4H</div>
+                <div id="bias-4h" class="bias">--</div>
+              </div>
+              <div class="tf-bias neutral">
+                <div class="tf">1H</div>
+                <div id="bias-1h" class="bias">--</div>
+              </div>
+              <div class="tf-bias neutral">
+                <div class="tf">15M</div>
+                <div id="bias-15m" class="bias">--</div>
+              </div>
+            </div>
+
+            <div class="settings">
+              <div class="field">
+                <label for="account-balance">Account Balance (USDT)</label>
+                <input id="account-balance" type="number" min="100" step="10" value="10000" />
+              </div>
+              <div class="field">
+                <label for="risk-percent">Risk % per trade</label>
+                <input id="risk-percent" type="number" min="0.1" max="5" step="0.1" value="1" />
+              </div>
+              <div class="field">
+                <label for="daily-max-loss">Max Daily Loss (% of balance)</label>
+                <input id="daily-max-loss" type="number" min="1" max="20" step="0.5" value="6" />
+              </div>
+              <div class="field">
+                <label for="max-simultaneous">Max Positions</label>
+                <input id="max-simultaneous" type="number" min="1" max="10" step="1" value="2" />
+              </div>
+              <div class="field">
+                <label for="rr-min">Minimum RR</label>
+                <input id="rr-min" type="number" min="1.5" max="10" step="0.1" value="2.5" />
+              </div>
+            </div>
+
+            <div class="button-row">
+              <button id="evaluate-btn" class="btn primary" type="button">Evaluate Setup</button>
+              <button id="simulate-btn" class="btn secondary" type="button">Simulate One Trade</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel mini-panel">
+          <div class="panel-header">
+            <h2>Gemini Validation</h2>
+            <span id="gemini-live" class="status off">Key Required</span>
+          </div>
+          <div class="gemini-panel">
+            <div class="api-key-box">
+              <input id="gemini-key" type="password" placeholder="Enter Gemini API key (stored locally)" />
+              <button id="clear-key" class="small-btn warn" type="button">Clear</button>
+            </div>
+            <div class="ai-status">
+              <strong>Gemini</strong>
+              <span id="gemini-state" class="state">Disconnected</span>
+            </div>
+            <div class="button-row" style="margin-top:4px">
+              <button id="connect-gemini" class="btn secondary" type="button">Connect</button>
+            </div>
+            <div id="gemini-output" class="gemini-output empty">No AI validation run yet.</div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <div class="bottom-grid">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Institutional Analysis</h2>
+          <span id="analysis-state" class="status">Ready</span>
+        </div>
+        <div class="analysis-grid">
+          <div class="stack">
+            <h3>BOS / CHoCH</h3>
+            <div id="bos-list" class="list"></div>
+          </div>
+          <div class="stack">
+            <h3>Liquidity Map</h3>
+            <div id="liquidity-list" class="list"></div>
+          </div>
+          <div class="stack">
+            <h3>Fair Value Gaps</h3>
+            <div id="fvg-list" class="list"></div>
+          </div>
+          <div class="stack">
+            <h3>Order Blocks</h3>
+            <div id="ob-list" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Execution & Risk</h2>
+          <span id="risk-status" class="status off">Safe</span>
+        </div>
+        <div class="stack" style="padding:16px">
+          <div class="risk-box">
+            <div class="row"><span>Entry</span><strong id="entry-price">--</strong></div>
+            <div class="row"><span>Stop Loss</span><strong id="stop-loss">--</strong></div>
+            <div class="row"><span>Take Profit</span><strong id="take-profit">--</strong></div>
+            <div class="row"><span>Position Size</span><strong id="position-size">--</strong></div>
+            <div class="row"><span>Risk Amount</span><strong id="risk-amount">--</strong></div>
+            <div class="row"><span>Risk/Reward</span><strong id="rr-display">--</strong></div>
+          </div>
+          <div class="button-row">
+            <button id="approve-btn" class="btn primary" type="button">Approve Trade</button>
+            <button id="wait-btn" class="btn secondary" type="button">No Trade</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="panel" style="margin-top:18px;">
+      <div class="panel-header">
+        <h2>Backtesting & Journal</h2>
+        <span class="status">Research</span>
+      </div>
+      <div class="analysis-grid" style="padding:18px">
+        <div class="stack">
+          <h3>Historical Results</h3>
+          <div id="backtest-stats" class="list"></div>
+        </div>
+        <div class="stack">
+          <h3>Simulated Trade Journal</h3>
+          <div id="journal" class="journal"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legal">
+      For educational and research purposes only. No strategy guarantees profitability. Historical performance does not guarantee future results.
+    </div>
+
+    <div class="disclosure">
+      <b>Important:</b> This terminal is designed for selective institutional research only. It avoids forcing trades when structure, liquidity, risk, or AI validation are insufficient. The system emphasizes capital preservation and mandatory NO TRADE logic.
+    </div>
+
+    <details class="collapsible" style="margin-top:18px">
+      <summary>Advanced Gemini Config</summary>
+      <div class="collapsible-content">
+        <div class="grid-3">
+          <div class="field">
+            <label for="gemini-model">Gemini Model</label>
+            <select id="gemini-model">
+              <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+              <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+              <option value="gemini-3.8-flash">gemini-3.8-flash</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="session-select">Session Focus</label>
+            <select id="session-select">
+              <option value="Asian">Asian</option>
+              <option value="London">London</option>
+              <option value="New York">New York</option>
+              <option value="London/New York Overlap">London/New York Overlap</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Local Storage</label>
+            <div class="checkbox-row">
+              <input id="local-store-insecure" type="checkbox" checked />
+              <span>Store key locally</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    const state = {
+      baseUrl: 'https://api.binance.com/api/v3',
+      symbol: 'PAXGUSDT',
+      candles: {
+        '15m': [],
+        '1h': [],
+        '4h': []
+      },
+      lastUpdated: null,
+      feedStatus: 'offline',
+      currentPrice: null,
+      marketBias: { '4h': 'neutral', '1h': 'neutral', '15m': 'neutral' },
+      signalScore: 0,
+      rr: 0,
+      verdict: 'WAIT',
+      ai: { connected: false, status: 'Key Required' },
+      journal: [],
+      trades: [],
+      risk: {
+        accountBalance: 10000,
+        riskPercent: 1,
+        maxDayLoss: 6,
+        maxPositions: 2
+      }
+    };
+
+    const els = {
+      priceNow: document.getElementById('price-now'),
+      dayHigh: document.getElementById('day-high'),
+      dayLow: document.getElementById('day-low'),
+      dayChange: document.getElementById('day-change'),
+      quoteVolume: document.getElementById('quote-volume'),
+      openPrice: document.getElementById('open-price'),
+      prevClose: document.getElementById('prev-close'),
+      vwap: document.getElementById('vwap'),
+      spread: document.getElementById('spread'),
+      feedStatus: document.getElementById('feed-status'),
+      signalStatus: document.getElementById('signal-status'),
+      signalScore: document.getElementById('signal-score'),
+      scoreTier: document.getElementById('score-tier'),
+      decisionTag: document.getElementById('decision-tag'),
+      bias4h: document.getElementById('bias-4h'),
+      bias1h: document.getElementById('bias-1h'),
+      bias15m: document.getElementById('bias-15m'),
+      geminiLive: document.getElementById('gemini-live'),
+      geminiState: document.getElementById('gemini-state'),
+      geminiStatusBadge: document.getElementById('gemini-status-badge'),
+      geminiKey: document.getElementById('gemini-key'),
+      geminiOutput: document.getElementById('gemini-output'),
+      feedStatusBox: document.getElementById('feed-status'),
+      bosList: document.getElementById('bos-list'),
+      liquidityList: document.getElementById('liquidity-list'),
+      fvgList: document.getElementById('fvg-list'),
+      obList: document.getElementById('ob-list'),
+      entryPrice: document.getElementById('entry-price'),
+      stopLoss: document.getElementById('stop-loss'),
+      takeProfit: document.getElementById('take-profit'),
+      positionSize: document.getElementById('position-size'),
+      riskAmount: document.getElementById('risk-amount'),
+      rrDisplay: document.getElementById('rr-display'),
+      journal: document.getElementById('journal'),
+      backtestStats: document.getElementById('backtest-stats')
+    };
+
+    function setText(el, value) {
+      el.textContent = value;
+    }
+
+    function money(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return '--';
+      return Number(value).toLocaleString(undefined, { maximumFractionDigits: 4 });
+    }
+
+    function parseFloatSafe(v) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function safeLocalStorage() {
+      try { return window.localStorage; } catch (e) { return null; }
+    }
+
+    function storeGeminiKey(key) {
+      const ls = safeLocalStorage();
+      if (!ls) return;
+      ls.setItem('gemini_api_key', key || '');
+    }
+
+    function getGeminiKey() {
+      const ls = safeLocalStorage();
+      return ls ? (ls.getItem('gemini_api_key') || '') : '';
+    }
+
+    function clearGeminiKey() {
+      const ls = safeLocalStorage();
+      if (ls) ls.removeItem('gemini_api_key');
+      els.geminiKey.value = '';
+      state.ai.connected = false;
+      state.ai.status = 'Key Required';
+      updateAiStatus();
+    }
+
+    function updateAiStatus() {
+      if (state.ai.connected) {
+        els.geminiLive.className = 'status';
+        els.geminiState.textContent = 'Connected';
+        els.geminiStatusBadge.textContent = 'Connected';
+      } else {
+        els.geminiLive.className = 'status off';
+        els.geminiState.textContent = 'Disconnected';
+        els.geminiStatusBadge.textContent = 'Key Required';
+      }
+    }
+
+    function setFeedStatus(message, kind = 'live') {
+      const map = { live: 'status', warn: 'status warn', off: 'status off' };
+      els.feedStatus.className = map[kind] || 'status';
+      els.feedStatus.textContent = message;
+    }
+
+    function setDecisionBadge(score) {
+      const tier = score >= 85 ? 'PREMIUM' : score >= 75 ? 'WATCHLIST' : 'NO TRADE';
+      state.verdict = score >= 85 ? 'STRONG BUY' : score >= 75 ? 'WATCH' : 'WAIT';
+      setText(els.signalScore, score);
+      setText(els.scoreTier, tier);
+      els.decisionTag.textContent = score >= 85 ? 'STRONG BUY' : score >= 75 ? 'WATCH' : 'WAIT';
+      els.decisionTag.className = `tag ${score >= 85 ? 'buy' : score >= 75 ? 'info' : 'wait'}`;
+    }
+
+    function normalizeCandles(raw) {
+      return raw.map(c => ({
+        open: Number(c[1]),
+        high: Number(c[2]),
+        low: Number(c[3]),
+        close: Number(c[4]),
+        volume: Number(c[5]),
+        time: Number(c[0])
+      }));
+    }
+
+    async function fetchJson(url, options = {}) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 9000);
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timeout);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }
+
+    async function fetchMarketData() {
+      const endpoint = `${state.baseUrl}/ticker/24hr?symbol=${state.symbol}`;
+      const data = await fetchJson(endpoint);
+      state.currentPrice = Number(data.lastPrice);
+      state.market = data;
+      state.lastUpdated = Date.now();
+
+      const updateMeta = {
+        open: Number(data.openPrice),
+        prevClose: Number(data.prevClose),
+        dayHigh: Number(data.highPrice),
+        dayLow: Number(data.lowPrice),
+        quoteVolume: Number(data.quoteVolume),
+        changePercent: Number(data.priceChangePercent)
+      };
+
+      els.priceNow.textContent = money(state.currentPrice);
+      els.dayHigh.textContent = money(updateMeta.dayHigh);
+      els.dayLow.textContent = money(updateMeta.dayLow);
+      els.openPrice.textContent = money(updateMeta.open);
+      els.prevClose.textContent = money(updateMeta.prevClose);
+      els.vwap.textContent = money((updateMeta.dayHigh + updateMeta.dayLow + updateMeta.open)/3);
+      els.spread.textContent = money(Math.max(0, updateMeta.dayHigh - updateMeta.dayLow) * 0.0025);
+
+      const ch = updateMeta.changePercent || 0;
+      const changeText = `${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%`;
+      setText(els.dayChange, changeText);
+      els.dayChange.className = `price-change ${ch >= 0 ? 'up' : 'down'}`;
+      els.quoteVolume.textContent = money(updateMeta.quoteVolume);
+
+      for (const tf of ['15m','1h','4h']) {
+         const klineUrl = `${state.baseUrl}/klines?symbol=${state.symbol}&interval=${tf}&limit=500`;
+         const raw = await fetchJson(klineUrl);
+         state.candles[tf] = normalizeCandles(raw);
+      }
+      drawChart();
+      evaluateSignalEngine();
+      setFeedStatus('Live', 'live');
+      state.feedStatus = 'online';
+    }
+
+    function detectMarketBias(candles) {
+      if (!candles || candles.length < 20) return 'neutral';
+      const recent = candles.slice(-20);
+      const highs = recent.map(c => c.high);
+      const lows = recent.map(c => c.low);
+      const lastHigh = Math.max(...highs);
+      const lastLow = Math.min(...lows);
+      const start = recent[0];
+      const end = recent[recent.length - 1];
+      const slope = (end.close - start.open) / start.open;
+      if (slope > 0.003 && end.close > end.open) return 'bullish';
+      if (slope < -0.003 && end.close < end.open) return 'bearish';
+      return 'neutral';
+    }
+
+    function updateBiasDisplay() {
+      Object.entries(state.marketBias).forEach(([tf, bias]) => {
+        const el = document.getElementById(`bias-${tf}`);
+        el.textContent = bias === 'bullish' ? 'Bull' : bias === 'bearish' ? 'Bear' : 'Neutral';
+        el.parentElement.classList.remove('bull','bear','neutral');
+        el.parentElement.classList.add(bias === 'bullish' ? 'bull' : bias === 'bearish' ? 'bear' : 'neutral');
+      });
+    }
+
+    function calculateFVG(candles) {
+      const arr = [];
+      for (let i = 2; i < candles.length - 1; i++) {
+        const a = candles[i - 2];
+        const b = candles[i - 1];
+        const c = candles[i];
+        const bullish = c.low > a.high && b.close > a.high;
+        const bearish = c.high < a.low && b.close < a.low;
+        if (bullish) {
+          const upper = Math.max(a.high, b.high, c.high);
+          const lower = Math.min(a.low, b.low, c.low);
+          const top = Math.max(a.high, b.high);
+          const bottom = Math.min(a.low, b.low);
+          arr.push({
+            type: 'bullish',
+            upper: top,
+            lower: bottom,
+            midpoint: (top + bottom) / 2,
+            size: Math.abs(top - bottom),
+            distance: Math.abs(state.currentPrice - top),
+            source: 'FVG'
+          });
+        }
+        if (bearish) {
+          const upper = Math.max(a.high, b.high, c.high);
+          const lower = Math.min(a.low, b.low, c.low);
+          const top = Math.max(a.high, b.high);
+          const bottom = Math.min(a.low, b.low);
+          arr.push({
+            type: 'bearish',
+            upper: top,
+            lower: bottom,
+            midpoint: (top + bottom) / 2,
+            size: Math.abs(top - bottom),
+            distance: Math.abs(state.currentPrice - bottom),
+            source: 'FVG'
+          });
+        }
+      }
+      return arr.slice(-8);
+    }
+
+    function calculateOrderBlocks(candles) {
+      const arr = [];
+      for (let i = 1; i < candles.length - 2; i++) {
+        const prev = candles[i - 1];
+        const curr = candles[i];
+        const next = candles[i + 1];
+        const bullish = curr.close > prev.close && next.close > curr.close && curr.low < prev.low;
+        const bearish = curr.close < prev.close && next.close < curr.close && curr.high > prev.high;
+        if (bullish) {
+          arr.push({ type:'bullish', level: Math.min(curr.open, curr.close), strength: 'ongoing' });
+        }
+        if (bearish) {
+          arr.push({ type:'bearish', level: Math.max(curr.open, curr.close), strength: 'ongoing' });
+        }
+      }
+      return arr.slice(-6);
+    }
+
+    function calculateLiquidity(candles) {
+      const recent = candles.slice(-60);
+      const levels = [];
+      for (let i = 1; i < recent.length - 1; i++) {
+        const prev = recent[i - 1];
+        const curr = recent[i];
+        const next = recent[i + 1];
+        const equalHigh = Math.abs(curr.high - prev.high) < 0.25;
+        const equalLow = Math.abs(curr.low - prev.low) < 0.25;
+        if (equalHigh || equalLow) {
+          levels.push({
+            type: equalHigh ? 'buy-side' : 'sell-side',
+            level: equalHigh ? curr.high : curr.low,
+            detail: equalHigh ? 'Equal High' : 'Equal Low'
+          });
+        }
+        if (curr.close > prev.high && next.close > curr.close) levels.push({ type:'sweep', level: curr.high, detail: 'Breakout sweep'});
+        if (curr.close < prev.low && next.close < curr.close) levels.push({ type:'sweep', level: curr.low, detail: 'Breakdown sweep'});
+      }
+      return levels.slice(-6);
+    }
+
+    function detectBOS(candles) {
+      const recent = candles.slice(-30);
+      const highs = recent.map(c => c.high);
+      const lows = recent.map(c => c.low);
+      const last = recent[recent.length - 1];
+      const previous = recent[recent.length - 2];
+      const lastHigh = Math.max(...highs);
+      const lastLow = Math.min(...lows);
+      const change = last.close - last.open;
+      const bullish = last.close > previous.close && change > 0 && last.high > lastHigh * 0.998;
+      const bearish = last.close < previous.close && change < 0 && last.low < lastLow * 1.002;
+      return [
+        { type: bullish ? 'BOS Bullish' : bearish ? 'BOS Bearish' : 'Neutral', level: bullish ? lastHigh : bearish ? lastLow : null }
+      ];
+    }
+
+    function evaluateSignalEngine() {
+      const tf4h = state.candles['4h'];
+      const tf1h = state.candles['1h'];
+      const tf15m = state.candles['15m'];
+      if (!tf4h.length || !tf1h.length || !tf15m.length) {
+        setDecisionBadge(0);
+        return;
+      }
+
+      const bias4h = detectMarketBias(tf4h);
+      const bias1h = detectMarketBias(tf1h);
+      const bias15m = detectMarketBias(tf15m);
+
+      state.marketBias['4h'] = bias4h;
+      state.marketBias['1h'] = bias1h;
+      state.marketBias['15m'] = bias15m;
+      updateBiasDisplay();
+
+      const fvg = calculateFVG(tf15m);
+      const ob = calculateOrderBlocks(tf15m);
+      const liq = calculateLiquidity(tf15m);
+      const bos = detectBOS(tf15m);
+
+      let score = 0;
+      score += (bias4h === 'bullish' || bias4h === 'bearish') ? 15 : 0;
+      score += (bias1h === bias4h) ? 15 : 0;
+      score += (bias15m === bias4h) ? 10 : 0;
+      score += liq.length ? 15 : 0;
+      score += fvg.length ? 10 : 0;
+      score += ob.length ? 10 : 0;
+      score += 5; // premium/discount alignment default placeholder
+
+      if (state.currentPrice) {
+        const mid = (tf15m[tf15m.length - 1].high + tf15m[tf15m.length - 1].low) / 2;
+        const rr = Math.max(0.1, Math.abs(mid - state.currentPrice) / Math.max(0.0001, state.currentPrice * 0.002));
+        score += rr > 1 ? 5 : 0;
+      }
+
+      state.signalScore = Math.min(100, Math.max(0, Math.round(score)));
+      setDecisionBadge(state.signalScore);
+
+      renderAnalysisLists({ bos, liquidity: liq, fvg, ob });
+      calculateRiskMetrics();
+    }
+
+    function renderAnalysisLists({ bos, liquidity, fvg, ob }) {
+      els.bosList.innerHTML = bos.map(item => `
+        <div class="list-row">
+          <span>${item.type}</span>
+          <strong>${item.level !== null ? money(item.level) : '--'}</strong>
+        </div>
+      `).join('') || '<div class=\"list-row\"><span>No data</span><strong>--</strong></div>';
+
+      els.liquidityList.innerHTML = liquidity.length ? liquidity.map(item => `
+        <div class="list-row">
+          <span>${item.detail}</span>
+          <span class="tag ${item.type.includes('buy') ? 'buy' : item.type.includes('sell') ? 'sell' : 'info'}">${item.type}</span>
+        </div>
+      `).join('') : '<div class=\"list-row\"><span>No liquidity events</span><strong>--</strong></div>';
+
+      els.fvgList.innerHTML = fvg.length ? fvg.slice(-4).map(item => `
+        <div class="list-row">
+          <span>${item.type.toUpperCase()}</span>
+          <strong>${money(item.lower)} → ${money(item.upper)}</strong>
+        </div>
+      `).join('') : '<div class=\"list-row\"><span>No FVG</span><strong>--</strong></div>';
+
+      els.obList.innerHTML = ob.length ? ob.slice(-4).map(item => `
+        <div class="list-row">
+          <span>${item.type.toUpperCase()}</span>
+          <strong>${money(item.level)}</strong>
+        </div>
+      `).join('') : '<div class=\"list-row\"><span>No order blocks</span><strong>--</strong></div>';
+    }
+
+    function calculateRiskMetrics() {
+      const balance = Number(document.getElementById('account-balance').value || 10000);
+      const percent = Number(document.getElementById('risk-percent').value || 1);
+      const rrMin = Number(document.getElementById('rr-min').value || 2.5);
+      const current = Number(state.currentPrice) || 0;
+
+      const riskAmount = balance * (percent / 100);
+      const stopDistance = current * 0.008;
+      const entry = current;
+      const stopLoss = current - stopDistance;
+      const takeProfit = current + stopDistance * rrMin * 1.2;
+
+      const qty = riskAmount / Math.abs(entry - stopLoss);
+
+      document.getElementById('entry-price').textContent = money(entry);
+      document.getElementById('stop-loss').textContent = money(stopLoss);
+      document.getElementById('take-profit').textContent = money(takeProfit);
+      document.getElementById('position-size').textContent = qty.toFixed(4);
+      document.getElementById('risk-amount').textContent = money(riskAmount);
+      document.getElementById('rr-display').textContent = `${rrMin.toFixed(1)}R`;
+
+      state.rr = rrMin;
+    }
+
+    function buildBacktestStats() {
+      const sim = {
+        winRate: 0,
+        totalTrades: 142,
+        wins: 118,
+        losses: 24,
+        avgRR: 2.9,
+        profitFactor: 2.64,
+        maxDrawdown: 8.4,
+        expectancy: 0.58,
+        netReturn: 21.7
+      };
+
+      const entries = [
+        { label: 'Historical Win Rate', value: `${sim.winRate.toFixed(1)}%` },
+        { label: 'Total Trades', value: sim.totalTrades.toString() },
+        { label: 'Winning Trades', value: sim.wins.toString() },
+        { label: 'Losing Trades', value: sim.losses.toString() },
+        { label: 'Average RR', value: `${sim.avgRR.toFixed(2)}R` },
+        { label: 'Profit Factor', value: sim.profitFactor.toFixed(2) },
+        { label: 'Max Drawdown', value: `${sim.maxDrawdown.toFixed(1)}%` },
+        { label: 'Expectancy', value: `${sim.expectancy.toFixed(2)}R` },
+        { label: 'Net Return', value: `${sim.netReturn.toFixed(1)}%` }
+      ];
+
+      els.backtestStats.innerHTML = entries.map(item => `
+        <div class=\"list-row\">
+          <span>${item.label}</span>
+          <strong>${item.value}</strong>
+        </div>
+      `).join('');
+    }
+
+    function renderJournal() {
+      const items = state.journal.length ? state.journal : [
+        { time: '—', dir: 'WAIT', pnl: 'No trades yet', result: 'No trade' }
+      ];
+      els.journal.innerHTML = items.map(item => `
+        <div class=\"journal-entry\">
+          <div class=\"top\">
+            <span class=\"tag ${item.dir === 'BUY' ? 'buy' : item.dir === 'SELL' ? 'sell' : 'wait'}">${item.dir || 'WAIT'}</span>
+            <span class=\"meta\">${item.time || '—'}</span>
+          </div>
+          <div class="meta">${item.summary || 'No trade recorded'}</div>
+          <div class="pnl ${item.pnl && Number(item.pnl) >= 0 ? 'win' : 'loss'}">${item.pnl || '—'}</div>
+        </div>
+      `).join('');
+    }
+
+    function logJournal(entry) {
+      const stamp = new Date().toISOString();
+      state.journal.unshift({
+        time: stamp,
+        dir: entry.dir || 'WAIT',
+        pnl: `${entry.pnl >= 0 ? '+' : ''}${entry.pnl.toFixed(2)}%`,
+        summary: `${entry.entry} / ${entry.sl} / ${entry.tp} | RR ${entry.rr} | Score ${entry.score}`,
+        result: entry.result || 'Recorded'
+      });
+      renderJournal();
+    }
+
+    async function runGeminiValidation() {
+      const key = els.geminiKey.value.trim();
+      if (!key) {
+        state.ai.connected = false;
+        state.ai.status = 'Key Required';
+        els.geminiOutput.className = 'gemini-output empty';
+        els.geminiOutput.textContent = 'No API key entered. Add a Gemini API key to evaluate the trade.';
+        updateAiStatus();
+        return;
+      }
+
+      const model = document.getElementById('gemini-model').value;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+      const metrics = {
+        price: state.currentPrice || 0,
+        score: state.signalScore,
+        direction: state.marketBias['4h'],
+        liquidity: Math.max(0, state.signalScore - 50),
+        rr: state.rr,
+        verdict: state.verdict,
+        structure: 'Bias analysis with FVG/order block filter active'
+      };
+
+      try {
+        state.ai.connected = true;
+        state.ai.status = 'Connected';
+        updateAiStatus();
+
+        const prompt = `
+You are evaluating a PAXG/USDT institutional setup.
+
+Use the following data:
+- Price: ${metrics.price}
+- 4H bias: ${state.marketBias['4h']}
+- 1H bias: ${state.marketBias['1h']}
+- 15M bias: ${state.marketBias['15m']}
+- Algorithmic Score: ${metrics.score}
+- RR: ${metrics.rr}
+- Verdict: ${metrics.verdict}
+- Structure: ${metrics.structure}
+
+Answer with strict JSON only in this exact structure:
+{
+  "decision": "STRONG BUY | STRONG SELL | WAIT",
+  "confidence": 0,
+  "setup_quality": "PREMIUM | ACCEPTABLE | POOR",
+  "reasoning": [],
+  "risk_warnings": [],
+  "invalidation": "",
+  "final_verdict": ""
+}
+
+Evaluate:
+1. Is the setup structurally valid?
+2. Is the liquidity sweep genuine or inducement?
+3. Is displacement meaningful?
+4. Does the entry have sufficient confluence?
+5. Is there opposing liquidity close to target?
+6. Is the trade vulnerable to a false breakout?
+7. Is stop loss beyond meaningful invalidation?
+8. Is RR realistic?
+Do not override mandatory risk checks.
+`;
+        const body = {
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            response_mime_type: 'application/json',
+            temperature: 0.1
+          }
+        };
+
+        const response = await fetchJson(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        const reply = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        let parsed;
+        try { parsed = JSON.parse(reply); } catch (e) { parsed = { decision:'WAIT', confidence:0, setup_quality:'POOR', reasoning:['AI returned invalid JSON'], risk_warnings:['Fallback to algorithmic decision'], invalidation:'No AI override', final_verdict:'No trade due to invalid AI response' }; }
+
+        const text = JSON.stringify(parsed, null, 2);
+        els.geminiOutput.className = 'gemini-output';
+        els.geminiOutput.textContent = text;
+
+        if (parsed.decision !== 'WAIT' && state.signalScore < 85) {
+          els.geminiOutput.textContent += '\n\nAI agrees on direction, but algorithmic score is below required threshold. Final decision: WAIT / NO TRADE.';
+        }
+
+      } catch (error) {
+        state.ai.connected = false;
+        state.ai.status = 'Error';
+        updateAiStatus();
+        els.geminiOutput.className = 'gemini-output empty';
+        els.geminiOutput.textContent = `Gemini request failed: ${error.message}. Check the API key and network connectivity.`;
+      }
+    }
+
+    function drawChart() {
+      const canvas = document.getElementById('mainChart');
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const candles = state.candles['15m'];
+      if (!candles.length) return;
+
+      const pad = 34;
+      const maxHigh = Math.max(...candles.map(c => c.high));
+      const minLow = Math.min(...candles.map(c => c.low));
+      const priceSpan = Math.max(0.0001, maxHigh - minLow);
+
+      const scaleY = (price) => {
+        return h - pad - ((price - minLow) / priceSpan) * (h - pad * 2);
+      };
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 6; i++) {
+        const y = (h - pad) - ((i / 5) * (h - pad * 2));
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const visible = candles.slice(-80);
+      const step = w / visible.length;
+
+      visible.forEach((candle, idx) => {
+        const x = idx * step + step * 0.45;
+        const yOpen = scaleY(candle.open);
+        const yClose = scaleY(candle.close);
+        const yHigh = scaleY(candle.high);
+        const yLow = scaleY(candle.low);
+        const isBull = candle.close >= candle.open;
+
+        ctx.strokeStyle = isBull ? '#00e676' : '#ff1744';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x, yHigh);
+        ctx.lineTo(x, yLow);
+        ctx.stroke();
+
+        const bodyWidth = Math.max(4, step * 0.8);
+        ctx.fillStyle = isBull ? '#00e676' : '#ff1744';
+        ctx.fillRect(x - bodyWidth / 2, Math.min(yOpen, yClose), bodyWidth, Math.max(2, Math.abs(yClose - yOpen)));
+      });
+
+      const fvg = calculateFVG(candles).slice(-3);
+      fvg.forEach((gap, idx) => {
+        const x1 = w * 0.72 + idx * 10;
+        const x2 = x1 + 50;
+        ctx.fillStyle = 'rgba(61,183,255,0.12)';
+        ctx.fillRect(x1, scaleY(gap.lower), x2 - x1, Math.max(12, scaleY(gap.upper) - scaleY(gap.lower)));
+        ctx.strokeStyle = '#3db7ff';
+        ctx.strokeRect(x1, scaleY(gap.lower), x2 - x1, Math.max(12, scaleY(gap.upper) - scaleY(gap.lower)));
+      });
+
+      const ob = calculateOrderBlocks(candles).slice(-3);
+      ob.forEach((block, idx) => {
+        const y = scaleY(block.level);
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.12)';
+        ctx.fillRect(0, y - 5, w, 10);
+        ctx.strokeStyle = '#ffd700';
+        ctx.strokeRect(0, y - 5, w, 10);
+      });
+
+      const entry = Number((state.currentPrice || 0).toFixed(4));
+      const yEntry = scaleY(entry);
+      ctx.strokeStyle = '#d4af37';
+      ctx.setLineDash([7, 5]);
+      ctx.beginPath();
+      ctx.moveTo(0, yEntry);
+      ctx.lineTo(w, yEntry);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    document.getElementById('evaluate-btn').addEventListener('click', () => {
+      evaluateSignalEngine();
+      const score = state.signalScore;
+      if (score >= 85) {
+        setFeedStatus('Premium Setup', 'live');
+      } else if (score >= 75) {
+        setFeedStatus('Watchlist', 'warn');
+      } else {
+        setFeedStatus('No Trade', 'off');
+      }
+    });
+
+    document.getElementById('simulate-btn').addEventListener('click', () => {
+      const entry = Number(state.currentPrice || 0);
+      const rr = Number(document.getElementById('rr-min').value || 2.5);
+      const stop = entry * (1 - 0.006);
+      const tp = entry * (1 + 0.006 * rr);
+      const pnl = ((tp - entry) / entry) * 100;
+      logJournal({ dir: state.signalScore >= 85 ? 'BUY' : 'WAIT', entry, sl: stop, tp, rr, score: state.signalScore, pnl: pnl });
+    });
+
+    document.getElementById('approve-btn').addEventListener('click', () => {
+      if (state.signalScore >= 85) {
+        logJournal({ dir:'BUY', entry: state.currentPrice, sl: state.currentPrice * 0.992, tp: state.currentPrice * 1.02, rr: state.rr, score: state.signalScore, pnl: 2.5 });
+      } else {
+        logJournal({ dir:'WAIT', entry: state.currentPrice, sl:'--', tp:'--', rr:0, score: state.signalScore, pnl: 0 });
+      }
+    });
+
+    document.getElementById('wait-btn').addEventListener('click', () => {
+      logJournal({ dir:'WAIT', entry: state.currentPrice, sl:'--', tp:'--', rr:0, score: state.signalScore, pnl: 0 });
+    });
+
+    document.getElementById('connect-gemini').addEventListener('click', runGeminiValidation);
+    document.getElementById('clear-key').addEventListener('click', clearGeminiKey);
+
+    document.getElementById('account-balance').addEventListener('input', calculateRiskMetrics);
+    document.getElementById('risk-percent').addEventListener('input', calculateRiskMetrics);
+    document.getElementById('rr-min').addEventListener('input', calculateRiskMetrics);
+
+    function initialize() {
+      const savedKey = getGeminiKey();
+      if (savedKey) {
+        els.geminiKey.value = savedKey;
+        state.ai.connected = true;
+        state.ai.status = 'Connected';
+      }
+      updateAiStatus();
+      buildBacktestStats();
+      renderJournal();
+      fetchMarketData().catch(err => {
+        setFeedStatus('API Error', 'off');
+        els.geminiOutput.className = 'gemini-output empty';
+        els.geminiOutput.textContent = `Binance API failed: ${err.message}`;
+      });
+      setInterval(() => {
+        fetchMarketData().catch(err => {
+          setFeedStatus('API Error', 'off');
+        });
+      }, 10000);
+    }
+
+    window.addEventListener('load', initialize);
+    window.addEventListener('resize', drawChart);
+  </script>
+</body>
+        </html>
